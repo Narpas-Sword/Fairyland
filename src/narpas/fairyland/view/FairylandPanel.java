@@ -29,6 +29,7 @@ public class FairylandPanel extends JPanel
 	private FairylandController baseController;
 	private SpringLayout baseLayout;
 	private FairylandKeyListener baseKeyListener;
+	private String keyPress;
 
 	public FairylandPanel(FairylandController baseController)
 	{
@@ -58,8 +59,18 @@ public class FairylandPanel extends JPanel
 	private void setupListeners()
 	{
 		this.addKeyListener(baseKeyListener);
+		baseKeyListener.setPanel(this);
 		this.setFocusable(true);
-		//baseKeyListener.keyPressed(null);
+	}
+	
+	public void doKeyPress(String inputKeyPressed)
+	{
+		
+	}
+	
+	public void doKeyRelease(String inputKeyPressed)
+	{
+		
 	}
 	
 	private static BufferedImage loadImg(String location)
