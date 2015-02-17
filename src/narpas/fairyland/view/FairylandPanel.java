@@ -85,11 +85,10 @@ public class FairylandPanel extends JPanel
 			this.remove(testLabel);
 			this.revalidate();
 			this.repaint();
-			testLabel.setIcon(this.resizeImage((JLabel) ((((FieldObj) fieldObjList.get(0)).getImage())), resizeSize).getIcon());
+			testLabel.setIcon(this.resizeImage(new JLabel(new ImageIcon(barren_tree)), resizeSize).getIcon());
 			this.add(testLabel);
 			this.revalidate();
 			this.repaint();
-			System.out.println(resizeSize + " up");
 		}
 		if (inputKeyPressed == "Down")
 		{
@@ -97,11 +96,10 @@ public class FairylandPanel extends JPanel
 			this.remove(testLabel);
 			this.revalidate();
 			this.repaint();
-			testLabel.setIcon(this.resizeImage((JLabel) ((((FieldObj) fieldObjList.get(0)).getImage())), resizeSize).getIcon());
+			testLabel.setIcon(this.resizeImage(new JLabel(new ImageIcon(barren_tree)), resizeSize).getIcon());
 			this.add(testLabel);
 			this.revalidate();
 			this.repaint();
-			System.out.println(resizeSize + " down");
 		}
 	}
 	
