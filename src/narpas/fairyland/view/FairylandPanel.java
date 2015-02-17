@@ -81,7 +81,7 @@ public class FairylandPanel extends JPanel
 	{
 		if (inputKeyPressed == "Up")
 		{
-			resizeSize += .1;
+			resizeSize += .01;
 			this.remove(testLabel);
 			this.revalidate();
 			this.repaint();
@@ -92,7 +92,7 @@ public class FairylandPanel extends JPanel
 		}
 		if (inputKeyPressed == "Down")
 		{
-			resizeSize -= .1;
+			resizeSize -= .01;
 			this.remove(testLabel);
 			this.revalidate();
 			this.repaint();
