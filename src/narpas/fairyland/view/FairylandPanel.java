@@ -35,6 +35,7 @@ public class FairylandPanel extends JPanel
 	private FairylandKeyListener baseKeyListener;
 	private String keyPress;
 	private int index;
+	private JLabel testLabel;
 
 	public FairylandPanel(FairylandController baseController)
 	{
@@ -46,7 +47,8 @@ public class FairylandPanel extends JPanel
 		fieldObjList.add(new FieldObj(0));
 		baseKeyListener = new FairylandKeyListener();
 		view.add(((FieldObj) fieldObjList.get(0)).getImage());
-		this.add(((Component) view.get(0)), this.getComponentCount());
+		//this.add(((Component) view.get(0)), this.getComponentCount());
+		testLabel = (JLabel) view.get(0);
 		setupPanel();
 		setupLayout();
 		setupListeners();		
@@ -55,11 +57,14 @@ public class FairylandPanel extends JPanel
 	private void setupPanel()
 	{
 		this.setLayout(baseLayout);
+		add(testLabel);
 		//this.add(whatever);
 	}
 	
 	private void setupLayout()
 	{
+		baseLayout.putConstraint(SpringLayout.NORTH, testLabel, 0, SpringLayout.NORTH, this);
+		baseLayout.putConstraint(SpringLayout.WEST, testLabel, 0, SpringLayout.WEST, this);
 		//baseLayout.putConstraints...
 	}
 	
@@ -74,9 +79,23 @@ public class FairylandPanel extends JPanel
 	{
 		if (inputKeyPressed == "Up")
 		{
-				this.remove(this.getComponentCount()-1);
-				view.set(0, resizeImage((JLabel) view.get(0), 1.1));
-				this.add(((Component) view.get(0)), this.getComponentCount());
+			this.remove(testLabel);
+			this.revalidate();
+			this.repaint();
+			testLabel.setIcon(this.resizeImage(testLabel, 1.1).getIcon());
+			this.add(testLabel);
+			this.revalidate();
+			this.repaint();
+		}
+		if (inputKeyPressed == "Down")
+		{
+			this.remove(testLabel);
+			this.revalidate();
+			this.repaint();
+			testLabel.setIcon(this.resizeImage(testLabel, 0.9).getIcon());
+			this.add(testLabel);
+			this.revalidate();
+			this.repaint();
 		}
 	}
 	
@@ -102,7 +121,7 @@ public class FairylandPanel extends JPanel
 	private JLabel resizeImage(JLabel resizingImage, double size)
 	{
 		Image resizedImage = (Image) ((ImageIcon) resizingImage.getIcon()).getImage();
-		resizedImage.getScaledInstance(resizingImage.getIcon().getIconWidth(), resizingImage.getIcon().getIconHeight(), Image.SCALE_DEFAULT);
+		resizedImage = resizedImage.getScaledInstance((int) (resizingImage.getIcon().getIconWidth()*size), (int) (resizingImage.getIcon().getIconHeight()*size), Image.SCALE_DEFAULT);
 		return new JLabel(new ImageIcon(resizedImage));
 	}
 }
