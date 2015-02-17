@@ -36,9 +36,11 @@ public class FairylandPanel extends JPanel
 	private String keyPress;
 	private int index;
 	private JLabel testLabel;
+	private double resizeSize;
 
 	public FairylandPanel(FairylandController baseController)
 	{
+		resizeSize = 1.0;
 		this.baseController = baseController;
 		baseLayout = new SpringLayout();
 		fieldObjList = new ArrayList(0);
@@ -79,23 +81,27 @@ public class FairylandPanel extends JPanel
 	{
 		if (inputKeyPressed == "Up")
 		{
+			resizeSize += .1;
 			this.remove(testLabel);
 			this.revalidate();
 			this.repaint();
-			testLabel.setIcon(this.resizeImage(testLabel, 1.1).getIcon());
+			testLabel.setIcon(this.resizeImage((JLabel) ((((FieldObj) fieldObjList.get(0)).getImage())), resizeSize).getIcon());
 			this.add(testLabel);
 			this.revalidate();
 			this.repaint();
+			System.out.println(resizeSize + " up");
 		}
 		if (inputKeyPressed == "Down")
 		{
+			resizeSize -= .1;
 			this.remove(testLabel);
 			this.revalidate();
 			this.repaint();
-			testLabel.setIcon(this.resizeImage(testLabel, 0.9).getIcon());
+			testLabel.setIcon(this.resizeImage((JLabel) ((((FieldObj) fieldObjList.get(0)).getImage())), resizeSize).getIcon());
 			this.add(testLabel);
 			this.revalidate();
 			this.repaint();
+			System.out.println(resizeSize + " down");
 		}
 	}
 	
@@ -120,8 +126,17 @@ public class FairylandPanel extends JPanel
 	
 	private JLabel resizeImage(JLabel resizingImage, double size)
 	{
-		Image resizedImage = (Image) ((ImageIcon) resizingImage.getIcon()).getImage();
-		resizedImage = resizedImage.getScaledInstance((int) (resizingImage.getIcon().getIconWidth()*size), (int) (resizingImage.getIcon().getIconHeight()*size), Image.SCALE_DEFAULT);
-		return new JLabel(new ImageIcon(resizedImage));
+		try
+		{
+			Image resizedImage = (Image) ((ImageIcon) resizingImage.getIcon()).getImage();
+			resizedImage = resizedImage.getScaledInstance((int) (resizingImage.getIcon().getIconWidth()*size), (int) (resizingImage.getIcon().getIconHeight()*size), Image.SCALE_DEFAULT);
+			return new JLabel(new ImageIcon(resizedImage));
+		}
+		catch (IllegalArgumentException e)
+		{
+			System.err.println("Caught IllegalArgumentException: " + e.getMessage());
+			System.err.println("Returning inputed JLabel");
+			return resizingImage;
+		}
 	}
 }
