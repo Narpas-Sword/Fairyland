@@ -26,26 +26,30 @@ import javax.swing.JLabel;
 
 public class FairylandPanel extends JPanel
 {
+	/**	The list that carries the objects	*/
 	private ArrayList fieldObjList;
 	private ArrayList view;
-	private ArrayList keyPressesArray;
 	public BufferedImage barren_tree = loadImg("src/narpas/fairyland/images/barren_tree2.png");
 	private FairylandController baseController;
 	private SpringLayout baseLayout;
+	/**	Listens for when keys are pressed by the player	*/
 	private FairylandKeyListener baseKeyListener;
 	private String keyPress;
-	private int index;
-	private JLabel testLabel;
-	private double resizeSize;
-
+	
+		//Debug Stuff
+		private JLabel testLabel;
+		private double resizeSize;
+		private int xPos;
+		//Debug Stuff
+	
 	public FairylandPanel(FairylandController baseController)
 	{
 		resizeSize = 1.0;
+		xPos = 0;
 		this.baseController = baseController;
 		baseLayout = new SpringLayout();
 		fieldObjList = new ArrayList(0);
 		view = new ArrayList(0);
-		keyPressesArray = new ArrayList(0);
 		fieldObjList.add(new FieldObj(0));
 		baseKeyListener = new FairylandKeyListener();
 		view.add(((FieldObj) fieldObjList.get(0)).getImage());
@@ -77,6 +81,11 @@ public class FairylandPanel extends JPanel
 		this.setFocusable(true);
 	}
 	
+	/**
+	 * Method for what happens when a key is pressed;
+	 * Called by FairylandKeyListener
+	 * @param inputKeyPressed
+	 */
 	public void doKeyPress(String inputKeyPressed)
 	{
 		if (inputKeyPressed == "Up")
@@ -101,6 +110,28 @@ public class FairylandPanel extends JPanel
 			this.revalidate();
 			this.repaint();
 		}
+		if (inputKeyPressed == "Left")
+		{
+			xPos -= 1;
+			this.remove(testLabel);
+			this.revalidate();
+			this.repaint();
+			baseLayout.putConstraint(SpringLayout.WEST, testLabel, xPos, SpringLayout.WEST, this);
+			this.add(testLabel);
+			this.revalidate();
+			this.repaint();
+		}
+		if (inputKeyPressed == "Right")
+		{
+			xPos += 1;
+			this.remove(testLabel);
+			this.revalidate();
+			this.repaint();
+			baseLayout.putConstraint(SpringLayout.WEST, testLabel, xPos, SpringLayout.WEST, this);
+			this.add(testLabel);
+			this.revalidate();
+			this.repaint();
+		}
 	}
 	
 	public void doKeyRelease(String inputKeyReleased)
@@ -108,6 +139,11 @@ public class FairylandPanel extends JPanel
 		
 	}
 	
+	/**
+	 * Loads the image at the location "location"
+	 * @param location
+	 * @return
+	 */
 	private static BufferedImage loadImg(String location)
 	{
 		BufferedImage img = null;
@@ -122,6 +158,12 @@ public class FairylandPanel extends JPanel
 		return img;
 	}
 	
+	/**
+	 * Resizes the inputed JLabel, by scaling by the size inputed	
+	 * @param resizingImage
+	 * @param size
+	 * @return
+	 */
 	private JLabel resizeImage(JLabel resizingImage, double size)
 	{
 		try

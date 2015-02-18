@@ -11,13 +11,22 @@ import javax.swing.JLabel;
 public class FieldObj
 {
 
+	/**	The angel of the object in relation to the player; 0 or 360 is in front, 90 is to the right, 180 is behind, and 270 is to the left	 */
 	private double posAngle;
+	/**	The distance away from the player an object is; 0 is at the player, and 1 is the farthest an object can be (when it is loaded and unloaded)	*/
 	private double posRadius;
+	/**	The type of object it is; current types are barren tree, apple tree, and monster	*/
 	private String type;
+	/**	The direction that an object is facing	*/
 	private double turnAngle;
+	/**	The image an object uses, represented as a JLabel	*/
 	private JLabel image;
 	public BufferedImage barren_tree = loadImg("src/narpas/fairyland/images/barren_tree2.png");
 	
+	/**
+	 * Loads a barren tree at angle "a" 
+	 * @param a
+	 */
 	public FieldObj(double a)
 	{
 		posAngle = a;
@@ -27,6 +36,12 @@ public class FieldObj
 		image = new JLabel(new ImageIcon(barren_tree));
 	}
 	
+	/**
+	 * Loads an object with a radius of "r" and an angle of "a" of type "t"
+	 * @param a
+	 * @param r
+	 * @param t
+	 */
 	public FieldObj(double a, double r, String t)
 	{
 		posAngle = a;
