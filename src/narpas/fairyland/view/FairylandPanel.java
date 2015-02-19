@@ -39,13 +39,13 @@ public class FairylandPanel extends JPanel
 		//Debug Stuff
 		private JLabel testLabel;
 		private double resizeSize;
-		private int xPos;
+		private int xScreenPos;
 		//Debug Stuff
 	
 	public FairylandPanel(FairylandController baseController)
 	{
 		resizeSize = 1.0;
-		xPos = 0;
+		xScreenPos = 0;
 		this.baseController = baseController;
 		baseLayout = new SpringLayout();
 		fieldObjList = new ArrayList(0);
@@ -90,6 +90,11 @@ public class FairylandPanel extends JPanel
 	{
 		if (inputKeyPressed == "Up")
 		{
+			for (Object objObj : fieldObjList)
+			{
+				FieldObj fieldObj = (FieldObj) objObj;
+				fieldObj.setXPos(fieldObj.getXPos()-0.1);
+			}
 			resizeSize += .01;
 			this.remove(testLabel);
 			this.revalidate();
@@ -101,6 +106,11 @@ public class FairylandPanel extends JPanel
 		}
 		if (inputKeyPressed == "Down")
 		{
+			for (Object objObj : fieldObjList)
+			{
+				FieldObj fieldObj = (FieldObj) objObj;
+				fieldObj.setXPos(fieldObj.getXPos()+0.1);
+			}
 			resizeSize -= .01;
 			this.remove(testLabel);
 			this.revalidate();
@@ -112,22 +122,38 @@ public class FairylandPanel extends JPanel
 		}
 		if (inputKeyPressed == "Left")
 		{
-			xPos -= 1;
+			for (Object objObj : fieldObjList)
+			{
+				FieldObj fieldObj = (FieldObj) objObj;
+				if (fieldObj.getPosAngle() >= 0.1)
+					fieldObj.setPosAngle(fieldObj.getPosAngle()-0.1);
+				else
+					fieldObj.setPosAngle(360-(fieldObj.getPosAngle()-0.1));
+			}
+			xScreenPos -= 1;
 			this.remove(testLabel);
 			this.revalidate();
 			this.repaint();
-			baseLayout.putConstraint(SpringLayout.WEST, testLabel, xPos, SpringLayout.WEST, this);
+			baseLayout.putConstraint(SpringLayout.WEST, testLabel, xScreenPos, SpringLayout.WEST, this);
 			this.add(testLabel);
 			this.revalidate();
 			this.repaint();
 		}
 		if (inputKeyPressed == "Right")
 		{
-			xPos += 1;
+			for (Object objObj : fieldObjList)
+			{
+				FieldObj fieldObj = (FieldObj) objObj;
+				if (fieldObj.getPosAngle() < 359.9)
+					fieldObj.setPosAngle(fieldObj.getPosAngle()+0.1);
+				else
+					fieldObj.setPosAngle((fieldObj.getPosAngle()+0.1)-360);
+			}
+			xScreenPos += 1;
 			this.remove(testLabel);
 			this.revalidate();
 			this.repaint();
-			baseLayout.putConstraint(SpringLayout.WEST, testLabel, xPos, SpringLayout.WEST, this);
+			baseLayout.putConstraint(SpringLayout.WEST, testLabel, xScreenPos, SpringLayout.WEST, this);
 			this.add(testLabel);
 			this.revalidate();
 			this.repaint();

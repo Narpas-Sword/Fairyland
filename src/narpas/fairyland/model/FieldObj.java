@@ -19,6 +19,8 @@ public class FieldObj
 	private String type;
 	/**	The direction that an object is facing	*/
 	private double turnAngle;
+	private double xPos;
+	private double yPos;
 	/**	The image an object uses, represented as a JLabel	*/
 	private JLabel image;
 	public BufferedImage barren_tree = loadImg("src/narpas/fairyland/images/barren_tree2.png");
@@ -34,6 +36,8 @@ public class FieldObj
 		type = "tree";
 		turnAngle = 0;
 		image = new JLabel(new ImageIcon(barren_tree));
+		xPos = Math.cos(posAngle)*posRadius;
+		yPos = Math.sin(posAngle)*posRadius;
 	}
 	
 	/**
@@ -48,6 +52,8 @@ public class FieldObj
 		posRadius = r;
 		type = t;
 		turnAngle = 0;
+		xPos = Math.cos(posAngle)*posRadius;
+		yPos = Math.sin(posAngle)*posRadius;
 	}
 	
 	public double getPosAngle()
@@ -70,6 +76,16 @@ public class FieldObj
 		return turnAngle;
 	}
 	
+	public double getXPos()
+	{
+		return xPos;
+	}
+	
+	public double getYPos()
+	{
+		return yPos;
+	}
+	
 	public JLabel getImage()
 	{
 		return image;
@@ -78,11 +94,15 @@ public class FieldObj
 	public void setPosAngle(double a)
 	{
 		posAngle = a;
+		xPos = Math.cos(posAngle)*posRadius;
+		yPos = Math.sin(posAngle)*posRadius;
 	}
 	
 	public void setPosRadius(double r)
 	{
 		posRadius = r;
+		xPos = Math.cos(posAngle)*posRadius;
+		yPos = Math.sin(posAngle)*posRadius;
 	}
 	
 	public void setType(String t)
@@ -93,6 +113,20 @@ public class FieldObj
 	public void setTurnAngle(double ta)
 	{
 		turnAngle = ta;
+	}
+	
+	public void setXPos(double x)
+	{
+		xPos = x;
+		posRadius = Math.sqrt(xPos*xPos + yPos*yPos);
+		posAngle = Math.atan(yPos/xPos);
+	}
+	
+	public void setYPos(double y)
+	{
+		yPos = y;
+		posRadius = Math.sqrt(xPos*xPos + yPos*yPos);
+		posAngle = Math.atan(yPos/xPos);
 	}
 	
 	private static BufferedImage loadImg(String location)
