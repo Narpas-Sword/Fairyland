@@ -160,6 +160,12 @@ public class FairylandPanel extends JPanel
 		}
 	}
 	
+	public void recreateView()
+	{
+		this.removeAll();
+		
+	}
+	
 	public void doKeyRelease(String inputKeyReleased)
 	{
 		
