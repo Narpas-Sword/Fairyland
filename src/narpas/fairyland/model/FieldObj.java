@@ -24,6 +24,7 @@ public class FieldObj
 	private double yPos;
 	private double labelHorzPos;
 	private double labelSize;
+	private double angleValue = (Math.PI / 180);
 	/**	The image an object uses, represented as a JLabel	*/
 	private JLabel image;
 	public BufferedImage barren_tree = loadImg("src/narpas/fairyland/images/barren_tree2.png");
@@ -39,8 +40,8 @@ public class FieldObj
 		type = "tree";
 		turnAngle = 0;
 		image = new JLabel(new ImageIcon(barren_tree));
-		xPos = Math.cos(posAngle)*posRadius;
-		yPos = Math.sin(posAngle)*posRadius;
+		xPos = Math.cos(posAngle * angleValue)*posRadius;
+		yPos = Math.sin(posAngle * angleValue)*posRadius;
 		updateLabel();
 	}
 	
@@ -56,19 +57,19 @@ public class FieldObj
 		posRadius = r;
 		type = t;
 		turnAngle = 0;
-		xPos = Math.cos(posAngle)*posRadius;
-		yPos = Math.sin(posAngle)*posRadius;
+		xPos = Math.cos(posAngle * angleValue)*posRadius;
+		yPos = Math.sin(posAngle * angleValue)*posRadius;
 		updateLabel();
 	}
 	
 	public void updateLabel()
 	{
-		labelSize = -0.5*posRadius + 4;
+		labelSize = -3.5*posRadius + 4;
 		image = resizeImage(new JLabel(new ImageIcon(barren_tree)), labelSize);
-		if (posAngle <= 50 + image.getWidth())
-			labelHorzPos = (java.awt.Toolkit.getDefaultToolkit().getScreenSize().width/100)*(50 - posAngle) - image.getWidth()/2;
-		else if (posAngle >= 310 -image.getWidth())
-			labelHorzPos = (java.awt.Toolkit.getDefaultToolkit().getScreenSize().width/100)*(100 - (posAngle - 310)) - image.getWidth()/2;
+		if (posAngle <= 50 + image.getIcon().getIconWidth()/2)
+			labelHorzPos = (java.awt.Toolkit.getDefaultToolkit().getScreenSize().width/100)*(50 - posAngle) - image.getIcon().getIconWidth()/2;
+		else if (posAngle >= 310 - image.getIcon().getIconWidth()/2)
+			labelHorzPos = (java.awt.Toolkit.getDefaultToolkit().getScreenSize().width/100)*(100 - (posAngle - 310)) - image.getIcon().getIconWidth()/2;
 		else
 			labelHorzPos = -123.45;
 		
@@ -139,16 +140,16 @@ public class FieldObj
 	public void setPosAngle(double a)
 	{
 		posAngle = a;
-		xPos = Math.cos(posAngle)*posRadius;
-		yPos = Math.sin(posAngle)*posRadius;
+		xPos = Math.cos(posAngle * angleValue)*posRadius;
+		yPos = Math.sin(posAngle * angleValue)*posRadius;
 		updateLabel();
 	}
 	
 	public void setPosRadius(double r)
 	{
 		posRadius = r;
-		xPos = Math.cos(posAngle)*posRadius;
-		yPos = Math.sin(posAngle)*posRadius;
+		xPos = Math.cos(posAngle * angleValue)*posRadius;
+		yPos = Math.sin(posAngle * angleValue)*posRadius;
 		updateLabel();
 	}
 	
@@ -166,7 +167,7 @@ public class FieldObj
 	{
 		xPos = x;
 		posRadius = Math.sqrt(xPos*xPos + yPos*yPos);
-		posAngle = Math.atan(yPos/xPos);
+		posAngle = Math.atan(yPos/xPos)/angleValue;
 		updateLabel();
 	}
 	
@@ -174,7 +175,7 @@ public class FieldObj
 	{
 		yPos = y;
 		posRadius = Math.sqrt(xPos*xPos + yPos*yPos);
-		posAngle = Math.atan(yPos/xPos);
+		posAngle = Math.atan(yPos/xPos)/angleValue;
 		updateLabel();
 	}
 	
