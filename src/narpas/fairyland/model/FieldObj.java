@@ -22,8 +22,8 @@ public class FieldObj
 	private double turnAngle;
 	private double xPos;
 	private double yPos;
-	private double labelPos;
-	private double lableSize;
+	private double labelHorzPos;
+	private double labelSize;
 	/**	The image an object uses, represented as a JLabel	*/
 	private JLabel image;
 	public BufferedImage barren_tree = loadImg("src/narpas/fairyland/images/barren_tree2.png");
@@ -41,6 +41,7 @@ public class FieldObj
 		image = new JLabel(new ImageIcon(barren_tree));
 		xPos = Math.cos(posAngle)*posRadius;
 		yPos = Math.sin(posAngle)*posRadius;
+		updateLabel();
 	}
 	
 	/**
@@ -57,13 +58,20 @@ public class FieldObj
 		turnAngle = 0;
 		xPos = Math.cos(posAngle)*posRadius;
 		yPos = Math.sin(posAngle)*posRadius;
+		updateLabel();
 	}
 	
 	public void updateLabel()
 	{
-//		labelSize = 
+		labelSize = -0.5*posRadius + 4;
+		image = resizeImage(new JLabel(new ImageIcon(barren_tree)), labelSize);
 		if (posAngle <= 50 + image.getWidth())
-/*this is wrong*/			labelPos = image.getWidth()/2 + java.awt.Toolkit.getDefaultToolkit().getScreenSize().width + (50 - posAngle);
+			labelHorzPos = (java.awt.Toolkit.getDefaultToolkit().getScreenSize().width/100)*(50 - posAngle) - image.getWidth()/2;
+		else if (posAngle >= 310 -image.getWidth())
+			labelHorzPos = (java.awt.Toolkit.getDefaultToolkit().getScreenSize().width/100)*(100 - (posAngle - 310)) - image.getWidth()/2;
+		else
+			labelHorzPos = -123.45;
+		
 	}
 	
 	/**
@@ -123,11 +131,17 @@ public class FieldObj
 		return image;
 	}
 	
+	public double getLabelHorzPos()
+	{
+		return labelHorzPos;
+	}
+	
 	public void setPosAngle(double a)
 	{
 		posAngle = a;
 		xPos = Math.cos(posAngle)*posRadius;
 		yPos = Math.sin(posAngle)*posRadius;
+		updateLabel();
 	}
 	
 	public void setPosRadius(double r)
@@ -135,6 +149,7 @@ public class FieldObj
 		posRadius = r;
 		xPos = Math.cos(posAngle)*posRadius;
 		yPos = Math.sin(posAngle)*posRadius;
+		updateLabel();
 	}
 	
 	public void setType(String t)
@@ -152,6 +167,7 @@ public class FieldObj
 		xPos = x;
 		posRadius = Math.sqrt(xPos*xPos + yPos*yPos);
 		posAngle = Math.atan(yPos/xPos);
+		updateLabel();
 	}
 	
 	public void setYPos(double y)
@@ -159,6 +175,7 @@ public class FieldObj
 		yPos = y;
 		posRadius = Math.sqrt(xPos*xPos + yPos*yPos);
 		posAngle = Math.atan(yPos/xPos);
+		updateLabel();
 	}
 	
 	private static BufferedImage loadImg(String location)
