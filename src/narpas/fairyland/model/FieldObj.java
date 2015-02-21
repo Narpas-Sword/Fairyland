@@ -14,7 +14,7 @@ public class FieldObj
 {
 
 	/**	The angel of the object in relation to the player; 0 or 360 is in front, 90 is to the right, 180 is behind, and 270 is to the left	 */
-	private int posAngle;
+	private double posAngle;
 	/**	The distance away from the player an object is; 0 is at the player, and 1 is the farthest an object can be (when it is loaded and unloaded)	*/
 	private double posRadius;
 	/**	The type of object it is; current types are barren tree, apple tree, and monster	*/
@@ -34,7 +34,7 @@ public class FieldObj
 	 * Loads a barren tree at angle "a" 
 	 * @param a
 	 */
-	public FieldObj(int a)
+	public FieldObj(double a)
 	{
 		posAngle = a;
 		posRadius = 1;
@@ -52,7 +52,7 @@ public class FieldObj
 	 * @param r
 	 * @param t
 	 */
-	public FieldObj(int a, double r, String t)
+	public FieldObj(double a, double r, String t)
 	{
 		posAngle = a;
 		posRadius = r;
@@ -67,9 +67,9 @@ public class FieldObj
 	{
 		labelSize = -3.5*posRadius + 4;
 		image = resizeImage(new JLabel(new ImageIcon(barren_tree)), labelSize);
-		if (posAngle <= 50/* + image.getIcon().getIconWidth()/2*/)
+		if (posAngle <= 50 + image.getIcon().getIconWidth()/4)
 			labelHorzPos = (java.awt.Toolkit.getDefaultToolkit().getScreenSize().width/100)*(50 - posAngle) - image.getIcon().getIconWidth()/2;
-		else if (posAngle >= 310/* - image.getIcon().getIconWidth()/2*/)
+		else if (posAngle >= 310 - image.getIcon().getIconWidth()/4)
 			labelHorzPos = (java.awt.Toolkit.getDefaultToolkit().getScreenSize().width/100)*(100 - (posAngle - 310)) - image.getIcon().getIconWidth()/2;
 		else
 			labelHorzPos = -12345;
@@ -88,7 +88,7 @@ public class FieldObj
 		{
 			Image resizedImage = (Image) ((ImageIcon) resizingImage.getIcon()).getImage();
 			resizedImage = resizedImage.getScaledInstance((int) (resizingImage.getIcon().getIconWidth()*size), (int) (resizingImage.getIcon().getIconHeight()*size), Image.SCALE_DEFAULT);
-			return new JLabel(/*"X:" + xPos + " Y:" + yPos + " R:" + posRadius +*/ " A:" + posAngle, new ImageIcon(resizedImage), SwingConstants.CENTER);
+			return new JLabel(/*"X:" + xPos + " Y:" + yPos + " R:" + posRadius + " A:" + posAngle*/ " L:" + labelHorzPos, new ImageIcon(resizedImage), SwingConstants.CENTER);
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -98,7 +98,7 @@ public class FieldObj
 		}
 	}
 	
-	public int getPosAngle()
+	public double getPosAngle()
 	{
 		return posAngle;
 	}
@@ -138,7 +138,7 @@ public class FieldObj
 		return labelHorzPos;
 	}
 	
-	public void setPosAngle(int a)
+	public void setPosAngle(double a)
 	{
 		posAngle = a;
 		xPos = Math.cos(posAngle * angleValue)*posRadius;
@@ -169,9 +169,9 @@ public class FieldObj
 		xPos = x;
 		posRadius = Math.sqrt(xPos*xPos + yPos*yPos);
 		if (xPos > 0)
-			posAngle = (int) (Math.atan(yPos/xPos)/angleValue);
+			posAngle = Math.atan(yPos/xPos)/angleValue;
 		else if (xPos < 0)
-			posAngle = (int) (Math.atan(yPos/xPos)/angleValue) + 180;
+			posAngle = Math.atan(yPos/xPos)/angleValue + 180;
 		else if (yPos > 0)
 			posAngle = 90;
 		else if (yPos < 0)
@@ -183,7 +183,7 @@ public class FieldObj
 	{
 		yPos = y;
 		posRadius = Math.sqrt(xPos*xPos + yPos*yPos);
-		posAngle = (int) (Math.atan(yPos/xPos)/angleValue);
+		posAngle = Math.atan(yPos/xPos)/angleValue;
 		updateLabel();
 	}
 	
