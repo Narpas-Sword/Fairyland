@@ -203,7 +203,7 @@ public class FairylandPanel extends JPanel
 		for (Object objObj : fieldObjList)
 		{
 			FieldObj fieldObj = (FieldObj) objObj;
-			if (fieldObj.getLabelHorzPos() != -12345 && fieldObj.getPosRadius() < 1.1)
+			if (fieldObj.getLabelHorzPos() != -12345/* && fieldObj.getPosRadius() < 1*/)
 			{
 				view.add(fieldObj.getImage());
 				baseLayout.putConstraint(SpringLayout.WEST, (Component) view.get(view.size()-1), (int) fieldObj.getLabelHorzPos(), SpringLayout.WEST, this);
@@ -211,8 +211,8 @@ public class FairylandPanel extends JPanel
 				this.add((Component) view.get(view.size()-1));
 			}
 		}
-		JLabel testLabelDisplay = new JLabel(("Angle: " + ((FieldObj) fieldObjList.get(0)).getPosAngle() + /*", Radius: " + ((FieldObj) fieldObjList.get(fieldObjList.size()-1)).getPosRadius() + ", X: " + ((FieldObj) fieldObjList.get(fieldObjList.size()-1)).getXPos() + ", Y: " + ((FieldObj) fieldObjList.get(fieldObjList.size()-1)).getYPos() + */", Label Position: " + ((FieldObj) fieldObjList.get(0)).getLabelHorzPos()) + ", Image Stuffs: " + (50 + ((FieldObj) fieldObjList.get(0)).getImage().getIcon().getIconWidth()/2));
-		this.add(testLabelDisplay);
+//		JLabel testLabelDisplay = new JLabel(("Angle: " + ((FieldObj) fieldObjList.get(0)).getPosAngle() + /*", Radius: " + ((FieldObj) fieldObjList.get(fieldObjList.size()-1)).getPosRadius() + ", X: " + ((FieldObj) fieldObjList.get(fieldObjList.size()-1)).getXPos() + ", Y: " + ((FieldObj) fieldObjList.get(fieldObjList.size()-1)).getYPos() + */", Label Position: " + ((FieldObj) fieldObjList.get(0)).getLabelHorzPos()) + ", Image Stuffs: " + (50 + ((FieldObj) fieldObjList.get(0)).getImage().getIcon().getIconWidth()/2));
+//		this.add(testLabelDisplay);
 		revalidate();
 		repaint();
 	}

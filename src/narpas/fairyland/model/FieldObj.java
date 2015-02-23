@@ -65,12 +65,14 @@ public class FieldObj
 	
 	public void updateLabel()
 	{
-		labelSize = -3.5*posRadius + 4;
+		//4*(2^(-x/1.5))-2
+		//labelSize = 4*(Math.pow(2, -posRadius/1.5))-2;
+		labelSize = -(posRadius)+2;
 		image = resizeImage(new JLabel(new ImageIcon(barren_tree)), labelSize);
-		if (posAngle <= 50 + image.getIcon().getIconWidth()/4)
-			labelHorzPos = (java.awt.Toolkit.getDefaultToolkit().getScreenSize().width/100)*(50 - posAngle) - image.getIcon().getIconWidth()/2;
-		else if (posAngle >= 310 - image.getIcon().getIconWidth()/4)
-			labelHorzPos = (java.awt.Toolkit.getDefaultToolkit().getScreenSize().width/100)*(100 - (posAngle - 310)) - image.getIcon().getIconWidth()/2;
+		if (posAngle <= 45 + image.getIcon().getIconWidth()/4 && xPos >= 0 && yPos >= 0)
+			labelHorzPos = (java.awt.Toolkit.getDefaultToolkit().getScreenSize().width/100)*(45 - posAngle) - image.getIcon().getIconWidth()/2;
+		else if (posAngle >= 315 - image.getIcon().getIconWidth()/2 && xPos >= 0 && yPos < 0)
+			labelHorzPos = (java.awt.Toolkit.getDefaultToolkit().getScreenSize().width/100)*(90 - (posAngle - 315)) - image.getIcon().getIconWidth()/2;
 		else
 			labelHorzPos = -12345;
 		
@@ -88,7 +90,7 @@ public class FieldObj
 		{
 			Image resizedImage = (Image) ((ImageIcon) resizingImage.getIcon()).getImage();
 			resizedImage = resizedImage.getScaledInstance((int) (resizingImage.getIcon().getIconWidth()*size), (int) (resizingImage.getIcon().getIconHeight()*size), Image.SCALE_DEFAULT);
-			return new JLabel(/*"X:" + xPos + " Y:" + yPos + " R:" + posRadius + " A:" + posAngle*/ " L:" + labelHorzPos, new ImageIcon(resizedImage), SwingConstants.CENTER);
+			return new JLabel(/*"X:" + xPos + " Y:" + yPos + " R:" + posRadius + " A:" + posAngle " L:" + labelHorzPos,*/ new ImageIcon(resizedImage), SwingConstants.CENTER);
 		}
 		catch (IllegalArgumentException e)
 		{
