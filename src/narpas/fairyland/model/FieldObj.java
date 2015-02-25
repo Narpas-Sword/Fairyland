@@ -233,16 +233,23 @@ public class FieldObj implements Comparable
 	public int compareTo(Object objObj)
 	{
 		int compareValue = 0;
-		FieldObj otherField = (FieldObj) objObj;
-		
-		if (posRadius > otherField.getPosRadius())
-			compareValue = 1;
-		else if (posRadius < otherField.getPosRadius())
-			compareValue = -1;
-		else if (Math.abs(posAngle-180) < Math.abs(otherField.getPosRadius()-180))
-			compareValue = 1;
-		else if (Math.abs(posAngle-180) > Math.abs(otherField.getPosRadius()-180))
-			compareValue = -1;
+		if (objObj instanceof FieldObj)
+		{
+			FieldObj otherField = (FieldObj) objObj;
+			
+			if (posRadius > otherField.getPosRadius())
+				compareValue = 1;
+			else if (posRadius < otherField.getPosRadius())
+				compareValue = -1;
+			else if (Math.abs(posAngle-180) < Math.abs(otherField.getPosRadius()-180))
+				compareValue = 1;
+			else if (Math.abs(posAngle-180) > Math.abs(otherField.getPosRadius()-180))
+				compareValue = -1;	
+		}
+		else
+		{
+			compareValue = Integer.MIN_VALUE;
+		}
 		
 		return compareValue;
 	}
