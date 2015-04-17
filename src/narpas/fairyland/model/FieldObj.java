@@ -13,7 +13,7 @@ import javax.swing.SwingConstants;
 public class FieldObj implements Comparable
 {
 
-	/**	The angel of the object in relation to the player; 0 or 360 is in front, 90 is to the right, 180 is behind, and 270 is to the left	 */
+	/**	The angle of the object in relation to the player; 0 or 360 is in front, 90 is to the right, 180 is behind, and 270 is to the left	 */
 	private double posAngle;
 	/**	The distance away from the player an object is; 0 is at the player, and 1 is the farthest an object can be (when it is loaded and unloaded)	*/
 	private double posRadius;
@@ -30,7 +30,7 @@ public class FieldObj implements Comparable
 	/** How large the lable of this object will be on the panel	*/
 	private double labelSize;
 	/** One degree in radians */
-	private double angleValue = (Math.PI / 180);
+	final private double ANGLE_VALUE = (Math.PI / 180);
 	/**	The image an object uses, represented as a JLabel	*/
 	private JLabel image;
 	public BufferedImage barren_tree = loadImg("src/narpas/fairyland/images/barren_tree2.png");
@@ -47,8 +47,8 @@ public class FieldObj implements Comparable
 		type = "tree";
 		turnAngle = 0;
 		image = new JLabel(new ImageIcon(barren_tree));
-		xPos = Math.cos(posAngle * angleValue)*posRadius;
-		yPos = Math.sin(posAngle * angleValue)*posRadius;
+		xPos = Math.cos(posAngle * ANGLE_VALUE)*posRadius;
+		yPos = Math.sin(posAngle * ANGLE_VALUE)*posRadius;
 		updateLabel();
 	}
 	
@@ -64,8 +64,8 @@ public class FieldObj implements Comparable
 		posRadius = r;
 		type = t;
 		turnAngle = 0;
-		xPos = Math.cos(posAngle * angleValue)*posRadius;
-		yPos = Math.sin(posAngle * angleValue)*posRadius;
+		xPos = Math.cos(posAngle * ANGLE_VALUE)*posRadius;
+		yPos = Math.sin(posAngle * ANGLE_VALUE)*posRadius;
 		updateLabel();
 	}
 	
@@ -75,8 +75,10 @@ public class FieldObj implements Comparable
 	public void updateLabel()
 	{
 		//4*(2^(-x/1.5))-2
-		//labelSize = 4*(Math.pow(2, -posRadius/1.5))-2;
-		labelSize = -(posRadius)+2;
+		//labelSize = -2*(posRadius)+2.5;
+		labelSize = 1.5*(-Math.log10(posRadius/100)-2)+0.5;
+		if (posRadius > 1)
+			labelSize = 0;
 		image = resizeImage(new JLabel(new ImageIcon(barren_tree)), labelSize);
 		if (posAngle <= 45 + image.getIcon().getIconWidth()/4 && xPos >= 0 && yPos >= 0)
 			labelHorzPos = (java.awt.Toolkit.getDefaultToolkit().getScreenSize().width/100)*(45 - posAngle) - image.getIcon().getIconWidth()/2;
@@ -105,7 +107,7 @@ public class FieldObj implements Comparable
 			catch (IllegalArgumentException e)
 			{
 				System.err.println("Caught IllegalArgumentException: " + e.getMessage());
-				System.err.println("Returning null JLabel");
+				System.err.println("Returning blank JLabel");
 				return new JLabel(new ImageIcon(blank));
 			}
 		else
@@ -159,8 +161,12 @@ public class FieldObj implements Comparable
 	public void setPosAngle(double a)
 	{
 		posAngle = a;
-		xPos = Math.cos(posAngle * angleValue)*posRadius;
-		yPos = Math.sin(posAngle * angleValue)*posRadius;
+		xPos = Math.cos(posAngle * ANGLE_VALUE)*posRadius;
+		yPos = Math.sin(posAngle * ANGLE_VALUE)*posRadius;
+		if (this.getPosAngle() >= 360)
+			this.setPosAngle(this.getPosAngle()-360);
+		if (this.getPosAngle() < 0)
+			this.setPosAngle(this.getPosAngle()+360);
 		updateLabel();
 	}
 	
@@ -171,8 +177,12 @@ public class FieldObj implements Comparable
 	public void setPosRadius(double r)
 	{
 		posRadius = r;
-		xPos = Math.cos(posAngle * angleValue)*posRadius;
-		yPos = Math.sin(posAngle * angleValue)*posRadius;
+		xPos = Math.cos(posAngle * ANGLE_VALUE)*posRadius;
+		yPos = Math.sin(posAngle * ANGLE_VALUE)*posRadius;
+		if (this.getPosAngle() >= 360)
+			this.setPosAngle(this.getPosAngle()-360);
+		if (this.getPosAngle() < 0)
+			this.setPosAngle(this.getPosAngle()+360);
 		updateLabel();
 	}
 	
@@ -195,13 +205,17 @@ public class FieldObj implements Comparable
 		xPos = x;
 		posRadius = Math.sqrt(xPos*xPos + yPos*yPos);
 		if (xPos > 0)
-			posAngle = Math.atan(yPos/xPos)/angleValue;
+			posAngle = Math.atan(yPos/xPos)/ANGLE_VALUE;
 		else if (xPos < 0)
-			posAngle = Math.atan(yPos/xPos)/angleValue + 180;
+			posAngle = Math.atan(yPos/xPos)/ANGLE_VALUE + 180;
 		else if (yPos > 0)
 			posAngle = 90;
 		else if (yPos < 0)
 			posAngle = 270;
+		if (this.getPosAngle() >= 360)
+			this.setPosAngle(this.getPosAngle()-360);
+		if (this.getPosAngle() < 0)
+			this.setPosAngle(this.getPosAngle()+360);
 		updateLabel();
 	}
 	
@@ -214,13 +228,17 @@ public class FieldObj implements Comparable
 		yPos = y;
 		posRadius = Math.sqrt(xPos*xPos + yPos*yPos);
 		if (xPos > 0)
-			posAngle = Math.atan(yPos/xPos)/angleValue;
+			posAngle = Math.atan(yPos/xPos)/ANGLE_VALUE;
 		else if (xPos < 0)
-			posAngle = Math.atan(yPos/xPos)/angleValue + 180;
+			posAngle = Math.atan(yPos/xPos)/ANGLE_VALUE + 180;
 		else if (yPos > 0)
 			posAngle = 90;
 		else if (yPos < 0)
 			posAngle = 270;
+		if (this.getPosAngle() >= 360)
+			this.setPosAngle(this.getPosAngle()-360);
+		if (this.getPosAngle() < 0)
+			this.setPosAngle(this.getPosAngle()+360);
 		updateLabel();
 	}
 	

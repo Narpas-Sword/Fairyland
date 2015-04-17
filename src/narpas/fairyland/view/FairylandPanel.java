@@ -34,6 +34,9 @@ public class FairylandPanel extends JPanel
 	private SpringLayout baseLayout;
 	/**	Listens for when keys are pressed by the player	*/
 	private FairylandKeyListener baseKeyListener;
+	private double movementSpeed = 0.01;
+	private double turnSpeed = 2.5;
+	private long lastTime;
 	
 		//Debug Stuff
 //		private JLabel testLabel;
@@ -48,10 +51,10 @@ public class FairylandPanel extends JPanel
 		baseLayout = new SpringLayout();
 		fieldObjList = new ArrayList<FieldObj>(0);
 		view = new ArrayList<JLabel>(0);
-		fieldObjList.add(new FieldObj(0, 0.5, "tree"));
-		fieldObjList.add(new FieldObj(90, 0.5, "tree"));
-		fieldObjList.add(new FieldObj(180, 0.5, "tree"));
-		fieldObjList.add(new FieldObj(270, 0.5, "tree"));
+		fieldObjList.add(new FieldObj(0, 0.25, "tree"));
+		fieldObjList.add(new FieldObj(90, 0.25, "tree"));
+		fieldObjList.add(new FieldObj(180, 0.25, "tree"));
+		fieldObjList.add(new FieldObj(270, 0.25, "tree"));
 		baseKeyListener = new FairylandKeyListener();
 		view.add(((FieldObj) fieldObjList.get(0)).getImage());
 		setupPanel();
@@ -93,57 +96,45 @@ public class FairylandPanel extends JPanel
 	 */
 	public void doKeyPress(String inputKeyPressed)
 	{
-		if (inputKeyPressed == "Up")
+		if (System.currentTimeMillis() > lastTime)
 		{
-			for (Object objObj : fieldObjList)
+			if (inputKeyPressed == "Up")
 			{
-				FieldObj fieldObj = (FieldObj) objObj;
-				fieldObj.setXPos(fieldObj.getXPos()-0.01);
-				if (fieldObj.getPosAngle() >= 360)
-					fieldObj.setPosAngle(fieldObj.getPosAngle()-360);
-				if (fieldObj.getPosAngle() < 0)
-					fieldObj.setPosAngle(fieldObj.getPosAngle()+360);
+				for (FieldObj fieldObj : fieldObjList)
+				{
+					fieldObj.setXPos(fieldObj.getXPos()-movementSpeed);
+				}
+				recreateView();
 			}
-			recreateView();
+			if (inputKeyPressed == "Down")
+			{
+				for (FieldObj fieldObj : fieldObjList)
+				{
+					fieldObj.setXPos(fieldObj.getXPos()+movementSpeed);
+				}
+				recreateView();
+			}
+			if (inputKeyPressed == "Left")
+			{
+				for (FieldObj fieldObj : fieldObjList)
+				{
+					fieldObj.setPosAngle(fieldObj.getPosAngle()-turnSpeed);
+				}
+				recreateView();
+			}
+			if (inputKeyPressed == "Right")
+			{
+				for (FieldObj fieldObj : fieldObjList)
+				{
+					fieldObj.setPosAngle(fieldObj.getPosAngle()+turnSpeed);
+				}
+				recreateView();
+			}
+			lastTime = System.currentTimeMillis();			
 		}
-		if (inputKeyPressed == "Down")
+		else
 		{
-			for (Object objObj : fieldObjList)
-			{
-				FieldObj fieldObj = (FieldObj) objObj;
-				fieldObj.setXPos(fieldObj.getXPos()+0.01);
-				if (fieldObj.getPosAngle() >= 360)
-					fieldObj.setPosAngle(fieldObj.getPosAngle()-360);
-				if (fieldObj.getPosAngle() < 0)
-					fieldObj.setPosAngle(fieldObj.getPosAngle()+360);
-			}
-			recreateView();
-		}
-		if (inputKeyPressed == "Left")
-		{
-			for (Object objObj : fieldObjList)
-			{
-				FieldObj fieldObj = (FieldObj) objObj;
-				fieldObj.setPosAngle(fieldObj.getPosAngle()-5);
-				if (fieldObj.getPosAngle() < 0)
-					fieldObj.setPosAngle(fieldObj.getPosAngle()+360);
-				if (fieldObj.getPosAngle() >= 360)
-					fieldObj.setPosAngle(fieldObj.getPosAngle()-360);
-			}
-			recreateView();
-		}
-		if (inputKeyPressed == "Right")
-		{
-			for (Object objObj : fieldObjList)
-			{
-				FieldObj fieldObj = (FieldObj) objObj;
-				fieldObj.setPosAngle(fieldObj.getPosAngle()+5);
-				if (fieldObj.getPosAngle() >= 360)
-					fieldObj.setPosAngle(fieldObj.getPosAngle()-360);
-				if (fieldObj.getPosAngle() < 0)
-					fieldObj.setPosAngle(fieldObj.getPosAngle()+360);
-			}
-			recreateView();
+			
 		}
 	}
 	
@@ -158,7 +149,7 @@ public class FairylandPanel extends JPanel
 			{
 				view.add(fieldObj.getImage());
 				baseLayout.putConstraint(SpringLayout.WEST, (Component) view.get(view.size()-1), (int) fieldObj.getLabelHorzPos(), SpringLayout.WEST, this);
-				baseLayout.putConstraint(SpringLayout.SOUTH, (Component) view.get(view.size()-1), (int) (-(this.getHeight()/1.75) + ((JLabel) view.get(view.size()-1)).getIcon().getIconHeight()/2), SpringLayout.SOUTH, this);
+				baseLayout.putConstraint(SpringLayout.SOUTH, (Component) view.get(view.size()-1), (int) (-(this.getHeight()/1.75) + ((JLabel) view.get(view.size()-1)).getIcon().getIconHeight()*0.45), SpringLayout.SOUTH, this);
 				this.add((Component) view.get(view.size()-1));
 			}
 		}
@@ -212,5 +203,10 @@ public class FairylandPanel extends JPanel
 			System.err.println("Returning null JLabel");
 			return new JLabel(new ImageIcon());
 		}
+	}
+	
+	public double getMovementSpeed()
+	{
+		return movementSpeed;
 	}
 }

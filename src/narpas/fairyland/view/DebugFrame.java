@@ -6,14 +6,14 @@ import javax.swing.JFrame;
 
 import narpas.fairyland.controller.FairylandController;
 
-public class FairylandFrame extends JFrame
+public class DebugFrame extends JFrame
 {
-	private FairylandPanel basePanel;
+	private DebugPanel basePanel;
 
-	public FairylandFrame(FairylandController baseController)
+	public DebugFrame(FairylandController baseController)
 	{
 		setResizable(false);
-		basePanel = new FairylandPanel(baseController);
+		basePanel = new DebugPanel(baseController);
 		setupFrame();
 	}
 
@@ -23,12 +23,12 @@ public class FairylandFrame extends JFrame
 	private void setupFrame()
 	{
 		this.setContentPane(basePanel);
-		this.setSize(java.awt.Toolkit.getDefaultToolkit().getScreenSize().width, java.awt.Toolkit.getDefaultToolkit().getScreenSize().height);
+		this.setSize(420, 440);
 		this.setResizable(false);
 		this.setVisible(true);
 	}
 	
-	public FairylandPanel getPanel()
+	public DebugPanel getPanel()
 	{
 		return basePanel;
 	}
