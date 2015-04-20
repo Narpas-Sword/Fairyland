@@ -37,6 +37,7 @@ public class FairylandPanel extends JPanel
 	private double movementSpeed = 0.01;
 	private double turnSpeed = 2.5;
 	private long lastTime;
+	private DebugFrame debug;
 	
 		//Debug Stuff
 //		private JLabel testLabel;
@@ -66,6 +67,7 @@ public class FairylandPanel extends JPanel
 	private void setupPanel()
 	{
 		this.setLayout(baseLayout);
+		debug = new DebugFrame(baseController, this);
 		/*	Debug Stuff	*	/
 		add(testLabel);
 		add(testLabelDisplay);
@@ -157,6 +159,7 @@ public class FairylandPanel extends JPanel
 //		this.add(testLabelDisplay);
 		revalidate();
 		repaint();
+		debug.getPanel().update(fieldObjList);
 	}
 	
 	public void doKeyRelease(String inputKeyReleased)

@@ -11,7 +11,7 @@ public class FairylandController
 	public FairylandController()
 	{
 		baseFrame = new FairylandFrame(this);
-		debug = new DebugFrame(this);
+//		debug = new DebugFrame(this);
 		baseFrame.getPanel().recreateView();
 	}
 

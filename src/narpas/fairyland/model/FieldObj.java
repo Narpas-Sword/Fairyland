@@ -75,8 +75,9 @@ public class FieldObj implements Comparable
 	public void updateLabel()
 	{
 		//4*(2^(-x/1.5))-2
-		//labelSize = -2*(posRadius)+2.5;
-		labelSize = 1.5*(-Math.log10(posRadius/100)-2)+0.5;
+//		labelSize = -2*(posRadius)+2.5;
+//		labelSize = 7.5*(-Math.log10(posRadius/100)-2)+0.5;
+		labelSize = 4.5*Math.pow((posRadius-1), 2) + .5;
 		if (posRadius > 1)
 			labelSize = 0;
 		image = resizeImage(new JLabel(new ImageIcon(barren_tree)), labelSize);
