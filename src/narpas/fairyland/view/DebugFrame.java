@@ -23,7 +23,7 @@ public class DebugFrame extends JFrame
 	private void setupFrame()
 	{
 		this.setContentPane(debug);
-		this.setSize(420, 440);
+		this.setSize(420, 430);
 		this.setResizable(false);
 		this.setVisible(true);
 	}

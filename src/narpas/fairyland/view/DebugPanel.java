@@ -23,11 +23,14 @@ public class DebugPanel extends JPanel
 	private JLabel radar;
 	private ArrayList<JButton> objectList;
 	private FairylandPanel basePanel;
+	private SpringLayout radarLayout;
 
 	public DebugPanel(FairylandController baseController, FairylandPanel basePanel)
 	{
 		this.basePanel = basePanel;
 		baseLayout = new SpringLayout();
+		radarLayout = new SpringLayout();
+		this.setLayout(baseLayout);
 		setupPanel();
 		setupLayout();
 	}
@@ -36,20 +39,21 @@ public class DebugPanel extends JPanel
 	{
 		radar = new JLabel(new ImageIcon((loadImg("src/narpas/fairyland/images/radar.png"))));
 		this.add(radar);
+		radar.setLayout(radarLayout);
 	}
 	
 	public void update(ArrayList<FieldObj> objList)
 	{
-		this.removeAll();
-		setupPanel();
-		setupLayout();
+		radar.removeAll();
 		for (FieldObj object : objList)
 		{
 			JLabel objectLabel = new JLabel(new ImageIcon((loadImg("src/narpas/fairyland/images/stump.png"))));
-			this.add(objectLabel);
-			baseLayout.putConstraint(SpringLayout.WEST, objectLabel, 200 + (int) (200 * object.getYPos()), SpringLayout.WEST, radar);
-			baseLayout.putConstraint(SpringLayout.NORTH, objectLabel, 200 + (int) (200 * object.getXPos()), SpringLayout.NORTH, radar);
+			radar.add(objectLabel);
+			radarLayout.putConstraint(SpringLayout.WEST, objectLabel, 200 - (int) (200 * object.getYPos()) - objectLabel.getIcon().getIconHeight()/2, SpringLayout.WEST, this);
+			radarLayout.putConstraint(SpringLayout.NORTH, objectLabel, 200 - (int) (200 * object.getXPos()) - objectLabel.getIcon().getIconHeight()/2, SpringLayout.NORTH, this);
 		}
+		radar.revalidate();
+		radar.repaint();
 		revalidate();
 		repaint();
 	}

@@ -52,12 +52,12 @@ public class FairylandPanel extends JPanel
 		baseLayout = new SpringLayout();
 		fieldObjList = new ArrayList<FieldObj>(0);
 		view = new ArrayList<JLabel>(0);
-		fieldObjList.add(new FieldObj(0, 0.25, "tree"));
-		fieldObjList.add(new FieldObj(90, 0.25, "tree"));
-		fieldObjList.add(new FieldObj(180, 0.25, "tree"));
-		fieldObjList.add(new FieldObj(270, 0.25, "tree"));
+//		fieldObjList.add(new FieldObj(0, 0.25, "tree"));
+//		fieldObjList.add(new FieldObj(90, 0.25, "tree"));
+//		fieldObjList.add(new FieldObj(180, 0.25, "tree"));
+//		fieldObjList.add(new FieldObj(270, 0.25, "tree"));
 		baseKeyListener = new FairylandKeyListener();
-		view.add(((FieldObj) fieldObjList.get(0)).getImage());
+//		view.add(((FieldObj) fieldObjList.get(0)).getImage());
 		setupPanel();
 		setupLayout();
 		setupListeners();
@@ -106,6 +106,15 @@ public class FairylandPanel extends JPanel
 				{
 					fieldObj.setXPos(fieldObj.getXPos()-movementSpeed);
 				}
+				if (Math.random() > 0.666)
+				{
+					double tempAngle = Math.random() * 180 - 90;
+					if (tempAngle < 0)
+					{
+						tempAngle += 360;
+					}
+					fieldObjList.add(new FieldObj(tempAngle));
+				}
 				recreateView();
 			}
 			if (inputKeyPressed == "Down")
@@ -113,6 +122,11 @@ public class FairylandPanel extends JPanel
 				for (FieldObj fieldObj : fieldObjList)
 				{
 					fieldObj.setXPos(fieldObj.getXPos()+movementSpeed);
+				}
+				if (Math.random() > 0.666)
+				{
+					double tempAngle = Math.random() * 180 + 90;
+					fieldObjList.add(new FieldObj(tempAngle));
 				}
 				recreateView();
 			}
@@ -153,6 +167,10 @@ public class FairylandPanel extends JPanel
 				baseLayout.putConstraint(SpringLayout.WEST, (Component) view.get(view.size()-1), (int) fieldObj.getLabelHorzPos(), SpringLayout.WEST, this);
 				baseLayout.putConstraint(SpringLayout.SOUTH, (Component) view.get(view.size()-1), (int) (-(this.getHeight()/1.75) + ((JLabel) view.get(view.size()-1)).getIcon().getIconHeight()*0.45), SpringLayout.SOUTH, this);
 				this.add((Component) view.get(view.size()-1));
+			}
+			if (fieldObj.getPosRadius() > 1)
+			{
+				fieldObjList.remove(fieldObj);
 			}
 		}
 //		JLabel testLabelDisplay = new JLabel((/*"Angle: " + ((FieldObj) fieldObjList.get(0)).getPosAngle() + */", Radius: " + ((FieldObj) fieldObjList.get(fieldObjList.size()-1)).getPosRadius()/* + ", X: " + ((FieldObj) fieldObjList.get(fieldObjList.size()-1)).getXPos() + ", Y: " + ((FieldObj) fieldObjList.get(fieldObjList.size()-1)).getYPos() + ", Label Position: " + ((FieldObj) fieldObjList.get(0)).getLabelHorzPos()) + ", Image Stuffs: " + (50 + ((FieldObj) fieldObjList.get(0)).getImage().getIcon().getIconWidth()/2*/));
