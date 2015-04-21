@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Timer;
 
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
@@ -26,167 +27,223 @@ import javax.swing.JLabel;
 
 public class FairylandPanel extends JPanel
 {
-	/**	The list that carries the objects	*/
+	/** The list that carries the objects */
 	private ArrayList<FieldObj> fieldObjList;
 	private ArrayList<JLabel> view;
 	public BufferedImage barren_tree = loadImg("src/narpas/fairyland/images/barren_tree2.png");
 	private FairylandController baseController;
 	private SpringLayout baseLayout;
-	/**	Listens for when keys are pressed by the player	*/
+	/** Listens for when keys are pressed by the player */
 	private FairylandKeyListener baseKeyListener;
 	private double movementSpeed = 0.01;
 	private double turnSpeed = 2.5;
-	private long lastTime;
+	private long lastTime = 0;
 	private DebugFrame debug;
-	
-		//Debug Stuff
-//		private JLabel testLabel;
-//		private double resizeSize;
-//		private int xScreenPos;
-//		private JLabel testLabelDisplay;
-		//Debug Stuff
-	
+	private java.util.Timer timer;
+	private boolean isRunning = true;
+
+	// Debug Stuff
+	// private JLabel testLabel;
+	// private double resizeSize;
+	// private int xScreenPos;
+	// private JLabel testLabelDisplay;
+	// Debug Stuff
+
 	public FairylandPanel(FairylandController baseController)
 	{
 		this.baseController = baseController;
 		baseLayout = new SpringLayout();
 		fieldObjList = new ArrayList<FieldObj>(0);
 		view = new ArrayList<JLabel>(0);
-//		fieldObjList.add(new FieldObj(0, 0.25, "tree"));
-//		fieldObjList.add(new FieldObj(90, 0.25, "tree"));
-//		fieldObjList.add(new FieldObj(180, 0.25, "tree"));
-//		fieldObjList.add(new FieldObj(270, 0.25, "tree"));
+		// fieldObjList.add(new FieldObj(0, 0.25, "tree"));
+		// fieldObjList.add(new FieldObj(90, 0.25, "tree"));
+		// fieldObjList.add(new FieldObj(180, 0.25, "tree"));
+		// fieldObjList.add(new FieldObj(270, 0.25, "tree"));
 		baseKeyListener = new FairylandKeyListener();
-//		view.add(((FieldObj) fieldObjList.get(0)).getImage());
+		// view.add(((FieldObj) fieldObjList.get(0)).getImage());
 		setupPanel();
 		setupLayout();
 		setupListeners();
 		recreateView();
+//		gameLoop();
 	}
-	
+
+//	private void gameLoop()
+//	{
+//		while (true)
+//		{
+//			if (System.currentTimeMillis() > lastTime + 16)
+//			{
+//				recreateView();
+//				lastTime = System.currentTimeMillis();
+//			}
+//		}
+////		gameLoop();
+//	}
+
+	public void gameLoop()
+	{
+	    timer = new Timer();
+	    timer.schedule(new LoopyStuff(), 0, 1000 / 60); //new timer at 60 fps, the timing mechanism
+	}
+
+	private class LoopyStuff extends java.util.TimerTask
+	{
+	    public void run() //this becomes the loop
+	    {
+	        recreateView();
+
+	        if (!isRunning)
+	        {
+	            timer.cancel();
+	        }
+	    }
+	}
+
 	private void setupPanel()
 	{
 		this.setLayout(baseLayout);
 		debug = new DebugFrame(baseController, this);
-		/*	Debug Stuff	*	/
-		add(testLabel);
-		add(testLabelDisplay);
-		/	*	Debug Stuff	*/
+		/*
+		 * Debug Stuff * / add(testLabel); add(testLabelDisplay); / * Debug
+		 * Stuff
+		 */
 	}
-	
+
 	private void setupLayout()
 	{
-		/*	Debug Stuff	*	/
-		baseLayout.putConstraint(SpringLayout.NORTH, testLabel, 0, SpringLayout.NORTH, this);
-		baseLayout.putConstraint(SpringLayout.WEST, testLabel, 0, SpringLayout.WEST, this);
-		baseLayout.putConstraint(SpringLayout.SOUTH, testLabelDisplay, 0, SpringLayout.SOUTH, this);
-		baseLayout.putConstraint(SpringLayout.WEST, testLabelDisplay, 0, SpringLayout.WEST, this);
-		/	*	Debug Stuff	*/
+		/*
+		 * Debug Stuff * / baseLayout.putConstraint(SpringLayout.NORTH,
+		 * testLabel, 0, SpringLayout.NORTH, this);
+		 * baseLayout.putConstraint(SpringLayout.WEST, testLabel, 0,
+		 * SpringLayout.WEST, this);
+		 * baseLayout.putConstraint(SpringLayout.SOUTH, testLabelDisplay, 0,
+		 * SpringLayout.SOUTH, this);
+		 * baseLayout.putConstraint(SpringLayout.WEST, testLabelDisplay, 0,
+		 * SpringLayout.WEST, this); / * Debug Stuff
+		 */
 	}
-	
+
 	private void setupListeners()
 	{
 		this.addKeyListener(baseKeyListener);
 		baseKeyListener.setPanel(this);
 		this.setFocusable(true);
 	}
-	
+
 	/**
-	 * Method for what happens when a key is pressed;
-	 * Called by FairylandKeyListener
+	 * Method for what happens when a key is pressed; Called by
+	 * FairylandKeyListener
+	 * 
 	 * @param inputKeyPressed
 	 */
 	public void doKeyPress(String inputKeyPressed)
 	{
-		if (System.currentTimeMillis() > lastTime)
+		if (inputKeyPressed == "Up")
 		{
-			if (inputKeyPressed == "Up")
+			for (FieldObj fieldObj : fieldObjList)
 			{
-				for (FieldObj fieldObj : fieldObjList)
-				{
-					fieldObj.setXPos(fieldObj.getXPos()-movementSpeed);
-				}
-				if (Math.random() > 0.666)
-				{
-					double tempAngle = Math.random() * 180 - 90;
-					if (tempAngle < 0)
-					{
-						tempAngle += 360;
-					}
-					fieldObjList.add(new FieldObj(tempAngle));
-				}
-				recreateView();
+				fieldObj.setXPos(fieldObj.getXPos() - movementSpeed);
 			}
-			if (inputKeyPressed == "Down")
+			if (Math.random() > 0.75)
 			{
-				for (FieldObj fieldObj : fieldObjList)
+				double tempAngle = Math.random() * 180 - 90;
+				if (tempAngle < 0)
 				{
-					fieldObj.setXPos(fieldObj.getXPos()+movementSpeed);
+					tempAngle += 360;
 				}
-				if (Math.random() > 0.666)
-				{
-					double tempAngle = Math.random() * 180 + 90;
-					fieldObjList.add(new FieldObj(tempAngle));
-				}
-				recreateView();
+				fieldObjList.add(new FieldObj(tempAngle));
 			}
-			if (inputKeyPressed == "Left")
-			{
-				for (FieldObj fieldObj : fieldObjList)
-				{
-					fieldObj.setPosAngle(fieldObj.getPosAngle()-turnSpeed);
-				}
-				recreateView();
-			}
-			if (inputKeyPressed == "Right")
-			{
-				for (FieldObj fieldObj : fieldObjList)
-				{
-					fieldObj.setPosAngle(fieldObj.getPosAngle()+turnSpeed);
-				}
-				recreateView();
-			}
-			lastTime = System.currentTimeMillis();			
 		}
-		else
+		if (inputKeyPressed == "Down")
 		{
-			
+			for (FieldObj fieldObj : fieldObjList)
+			{
+				fieldObj.setXPos(fieldObj.getXPos() + movementSpeed);
+			}
+			if (Math.random() > 0.75)
+			{
+				double tempAngle = Math.random() * 180 + 90;
+				fieldObjList.add(new FieldObj(tempAngle));
+			}
+		}
+		if (inputKeyPressed == "Left")
+		{
+			for (FieldObj fieldObj : fieldObjList)
+			{
+				fieldObj.setPosAngle(fieldObj.getPosAngle() - turnSpeed);
+			}
+		}
+		if (inputKeyPressed == "Right")
+		{
+			for (FieldObj fieldObj : fieldObjList)
+			{
+				fieldObj.setPosAngle(fieldObj.getPosAngle() + turnSpeed);
+			}
+		}
+		if (System.currentTimeMillis() > lastTime + 16)
+		{
+			recreateView();
+			lastTime = System.currentTimeMillis();
 		}
 	}
-	
+
 	public void recreateView()
 	{
 		this.removeAll();
 		view.clear();
+		ArrayList<Integer> removeList = new ArrayList<Integer>();
 		for (Object objObj : fieldObjList)
 		{
 			FieldObj fieldObj = (FieldObj) objObj;
-			if (fieldObj.getLabelHorzPos() != -12345/* && fieldObj.getPosRadius() < 1*/)
+			if (fieldObj.getLabelHorzPos() != -12345)
 			{
 				view.add(fieldObj.getImage());
-				baseLayout.putConstraint(SpringLayout.WEST, (Component) view.get(view.size()-1), (int) fieldObj.getLabelHorzPos(), SpringLayout.WEST, this);
-				baseLayout.putConstraint(SpringLayout.SOUTH, (Component) view.get(view.size()-1), (int) (-(this.getHeight()/1.75) + ((JLabel) view.get(view.size()-1)).getIcon().getIconHeight()*0.45), SpringLayout.SOUTH, this);
-				this.add((Component) view.get(view.size()-1));
+				baseLayout.putConstraint(SpringLayout.WEST,
+						(Component) view.get(view.size() - 1),
+						(int) fieldObj.getLabelHorzPos(), SpringLayout.WEST,
+						this);
+				baseLayout.putConstraint(SpringLayout.SOUTH, (Component) view
+						.get(view.size() - 1),
+						(int) (-(this.getHeight() / 1.75) + ((JLabel) view
+								.get(view.size() - 1)).getIcon()
+								.getIconHeight() * 0.45), SpringLayout.SOUTH,
+						this);
+				this.add((Component) view.get(view.size() - 1));
 			}
 			if (fieldObj.getPosRadius() > 1)
 			{
-				fieldObjList.remove(fieldObj);
+				removeList.add(fieldObjList.lastIndexOf(fieldObj));
 			}
 		}
-//		JLabel testLabelDisplay = new JLabel((/*"Angle: " + ((FieldObj) fieldObjList.get(0)).getPosAngle() + */", Radius: " + ((FieldObj) fieldObjList.get(fieldObjList.size()-1)).getPosRadius()/* + ", X: " + ((FieldObj) fieldObjList.get(fieldObjList.size()-1)).getXPos() + ", Y: " + ((FieldObj) fieldObjList.get(fieldObjList.size()-1)).getYPos() + ", Label Position: " + ((FieldObj) fieldObjList.get(0)).getLabelHorzPos()) + ", Image Stuffs: " + (50 + ((FieldObj) fieldObjList.get(0)).getImage().getIcon().getIconWidth()/2*/));
-//		this.add(testLabelDisplay);
+		for (Integer removeSpot : removeList)
+		{
+			fieldObjList.remove(removeSpot);
+		}
+		// JLabel testLabelDisplay = new JLabel((/*"Angle: " + ((FieldObj)
+		// fieldObjList.get(0)).getPosAngle() + */", Radius: " + ((FieldObj)
+		// fieldObjList.get(fieldObjList.size()-1)).getPosRadius()/* + ", X: " +
+		// ((FieldObj) fieldObjList.get(fieldObjList.size()-1)).getXPos() +
+		// ", Y: " + ((FieldObj)
+		// fieldObjList.get(fieldObjList.size()-1)).getYPos() +
+		// ", Label Position: " + ((FieldObj)
+		// fieldObjList.get(0)).getLabelHorzPos()) + ", Image Stuffs: " + (50 +
+		// ((FieldObj)
+		// fieldObjList.get(0)).getImage().getIcon().getIconWidth()/2*/));
+		// this.add(testLabelDisplay);
 		revalidate();
 		repaint();
 		debug.getPanel().update(fieldObjList);
 	}
-	
+
 	public void doKeyRelease(String inputKeyReleased)
 	{
-		
+
 	}
-	
+
 	/**
 	 * Loads the image at the location "location"
+	 * 
 	 * @param location
 	 * @return
 	 */
@@ -196,16 +253,16 @@ public class FairylandPanel extends JPanel
 		try
 		{
 			img = ImageIO.read(new File(location));
-		}
-		catch (IOException e)
+		} catch (IOException e)
 		{
 			e.printStackTrace();
 		}
 		return img;
 	}
-	
+
 	/**
-	 * Resizes the inputed JLabel, by scaling by the size inputed	
+	 * Resizes the inputed JLabel, by scaling by the size inputed
+	 * 
 	 * @param resizingImage
 	 * @param size
 	 * @return
@@ -214,18 +271,21 @@ public class FairylandPanel extends JPanel
 	{
 		try
 		{
-			Image resizedImage = (Image) ((ImageIcon) resizingImage.getIcon()).getImage();
-			resizedImage = resizedImage.getScaledInstance((int) (resizingImage.getIcon().getIconWidth()*size), (int) (resizingImage.getIcon().getIconHeight()*size), Image.SCALE_DEFAULT);
+			Image resizedImage = (Image) ((ImageIcon) resizingImage.getIcon())
+					.getImage();
+			resizedImage = resizedImage.getScaledInstance((int) (resizingImage
+					.getIcon().getIconWidth() * size), (int) (resizingImage
+					.getIcon().getIconHeight() * size), Image.SCALE_DEFAULT);
 			return new JLabel(new ImageIcon(resizedImage));
-		}
-		catch (IllegalArgumentException e)
+		} catch (IllegalArgumentException e)
 		{
-			System.err.println("Caught IllegalArgumentException: " + e.getMessage());
+			System.err.println("Caught IllegalArgumentException: "
+					+ e.getMessage());
 			System.err.println("Returning null JLabel");
 			return new JLabel(new ImageIcon());
 		}
 	}
-	
+
 	public double getMovementSpeed()
 	{
 		return movementSpeed;
